@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.cache/
+*.log
+
+# Local configuration and secrets (copy web/.env.example instead)
+.env
+.env.local
+.env.*.local
+
+# Embedding model files are downloaded by `npm run embed`
+web/models/

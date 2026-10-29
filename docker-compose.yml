@@ -1,0 +1,27 @@
+# PostgreSQL 16 with the pgvector extension, initialised from ./db on first start.
+# Usage:  docker compose up -d        (reset: docker compose down -v && docker compose up -d)
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: careflow-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hms
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      HMS_APP_PASSWORD: ${HMS_APP_PASSWORD:-change_me}
+      TZ: Asia/Kolkata
+      PGTZ: Asia/Kolkata
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db:/hms-db:ro
+      - ./db/docker-init.sh:/docker-entrypoint-initdb.d/10-hms-init.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d hms"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  pgdata:
