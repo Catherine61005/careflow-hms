@@ -1,0 +1,14 @@
+{
+  "Cardiology": "Heart and blood vessel disorders: chest pain, angina, heart attack, palpitations, arrhythmia, hypertension, heart failure, breathlessness with swollen legs.",
+  "Neurology": "Brain, spinal cord and nerve disorders: stroke, paralysis, seizures, epilepsy, migraine, numbness, tremor, memory loss, head injury.",
+  "Orthopedics": "Bones, joints and muscles: fractures, broken bones, joint pain, arthritis, back pain, disc problems, sports injuries, ligament tears, dislocation.",
+  "Pulmonology": "Lung and breathing disorders: cough, pneumonia, asthma, wheezing, COPD, tuberculosis, low oxygen, breathlessness, sleep apnea.",
+  "Gastroenterology": "Stomach, intestine and liver disorders: abdominal pain, vomiting, diarrhoea, acidity, jaundice, liver disease, gallstones, GI bleeding.",
+  "Nephrology": "Kidney disorders: kidney failure, dialysis, creatinine, kidney stones, urinary infection, swelling with protein in urine, electrolyte imbalance.",
+  "General Medicine": "General internal medicine: fever, infections, dengue, malaria, typhoid, diabetes, dehydration, weakness, fatigue, anaemia.",
+  "Pediatrics": "Children and newborn care: fever in children, infant diarrhoea, newborn jaundice, premature baby, childhood infections, vaccination.",
+  "Obstetrics & Gynecology": "Pregnancy, childbirth and women's health: labour, delivery, caesarean, pregnancy complications, menstrual problems, ovarian cysts.",
+  "Oncology": "Cancer care: tumours, malignancy, chemotherapy, radiotherapy, biopsy, leukaemia, breast cancer, lung cancer, oral cancer.",
+  "ENT": "Ear, nose and throat: tonsils, sore throat, sinusitis, blocked nose, hearing loss, ear infection, nosebleed.",
+  "Dermatology": "Skin disorders: rashes, skin infection, cellulitis, psoriasis, eczema, allergic reactions, blisters, burns."
+}
