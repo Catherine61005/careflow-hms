@@ -3,7 +3,7 @@
 Both members work on the database **and** the application, as the project brief requires.
 Each member commits their own files from their own GitHub account so the commit history shows the split.
 
-## Member 1 — PES1UG24CS115 — Inpatient & finance
+## Member 1 — Bhavesh Velluru — PES1UG24CS115 — Inpatient & finance
 
 **Database**
 - Tables: `room`, `room_allocation`, `admission`, `bill`, `payment` (+ their constraints: `ex_room_overlap`, `uq_one_open_admission`, `ck_discharge_after_admit`, `money_inr` domain)

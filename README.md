@@ -2,9 +2,11 @@
 
 DBMS Experiential Learning – Level 3 Project · Department of CSE, PES University
 
+Repository: https://github.com/Catherine61005/careflow-hms
+
 | Team member | SRN | Module ownership |
 |---|---|---|
-| _Member 1 (fill name)_ | PES1UG24CS115 | Inpatient & finance: admissions, rooms, billing, payments, reports |
+| Bhavesh Velluru | PES1UG24CS115 | Inpatient & finance: admissions, rooms, billing, payments, reports |
 | Catherine D | PES1UG24CS120 | Outpatient & clinical: patients, appointments, labs, prescriptions, semantic triage, auth |
 
 See [`CONTRIBUTIONS.md`](CONTRIBUTIONS.md) for the file-level split.
@@ -84,7 +86,7 @@ Prerequisites: **Node.js 20+** and either **Docker Desktop** (easiest) or a loca
 ### Option A — Docker (recommended, works on Windows/macOS/Linux)
 
 ```bash
-git clone <this repo> && cd careflow-hms
+git clone https://github.com/Catherine61005/careflow-hms.git && cd careflow-hms
 docker compose up -d                 # PostgreSQL + pgvector, schema and seed loaded automatically
 cd web
 cp .env.example .env.local           # Windows: copy .env.example .env.local
