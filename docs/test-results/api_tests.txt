@@ -1,0 +1,184 @@
+TAP version 13
+# Subtest: API01 wrong password is rejected with 401 and a generic message
+ok 1 - API01 wrong password is rejected with 401 and a generic message
+  ---
+  duration_ms: 401.58837
+  type: 'test'
+  ...
+# Subtest: API02 unknown user gets the same generic message (no user enumeration)
+ok 2 - API02 unknown user gets the same generic message (no user enumeration)
+  ---
+  duration_ms: 6.944995
+  type: 'test'
+  ...
+# Subtest: API03 unauthenticated request to a protected API returns 401
+ok 3 - API03 unauthenticated request to a protected API returns 401
+  ---
+  duration_ms: 5.30683
+  type: 'test'
+  ...
+# Subtest: API04 receptionist cannot open admin user management (403)
+ok 4 - API04 receptionist cannot open admin user management (403)
+  ---
+  duration_ms: 5.339622
+  type: 'test'
+  ...
+# Subtest: API05 doctor cannot view billing (403)
+ok 5 - API05 doctor cannot view billing (403)
+  ---
+  duration_ms: 5.34109
+  type: 'test'
+  ...
+# Subtest: API06 doctor cannot register patients (403)
+ok 6 - API06 doctor cannot register patients (403)
+  ---
+  duration_ms: 7.409814
+  type: 'test'
+  ...
+# Subtest: API07 receptionist cannot write prescriptions (403)
+ok 7 - API07 receptionist cannot write prescriptions (403)
+  ---
+  duration_ms: 8.607314
+  type: 'test'
+  ...
+# Subtest: API08 doctor sees only their own appointments
+ok 8 - API08 doctor sees only their own appointments
+  ---
+  duration_ms: 10.02775
+  type: 'test'
+  ...
+# Subtest: API09 receptionist registers a valid patient (201)
+ok 9 - API09 receptionist registers a valid patient (201)
+  ---
+  duration_ms: 11.484331
+  type: 'test'
+  ...
+# Subtest: API10 invalid phone rejected by API validation (400)
+ok 10 - API10 invalid phone rejected by API validation (400)
+  ---
+  duration_ms: 10.388712
+  type: 'test'
+  ...
+# Subtest: API11 future date of birth passes API but is rejected by the DATABASE trigger (400)
+ok 11 - API11 future date of birth passes API but is rejected by the DATABASE trigger (400)
+  ---
+  duration_ms: 6.405495
+  type: 'test'
+  ...
+# Subtest: API12 SQL-injection text in search is treated as data
+ok 12 - API12 SQL-injection text in search is treated as data
+  ---
+  duration_ms: 25.151156
+  type: 'test'
+  ...
+# Subtest: API13 fuzzy search finds the patient despite a typo
+ok 13 - API13 fuzzy search finds the patient despite a typo
+  ---
+  duration_ms: 6.42762
+  type: 'test'
+  ...
+# Subtest: API14 booking + double-booking the same 30-min slot returns 409 (EXCLUDE constraint)
+ok 14 - API14 booking + double-booking the same 30-min slot returns 409 (EXCLUDE constraint)
+  ---
+  duration_ms: 20.167015
+  type: 'test'
+  ...
+# Subtest: API15 booking in the past is rejected (trigger, 400)
+ok 15 - API15 booking in the past is rejected (trigger, 400)
+  ---
+  duration_ms: 8.082367
+  type: 'test'
+  ...
+# Subtest: API16 admit patient (transaction) marks the room Occupied
+ok 16 - API16 admit patient (transaction) marks the room Occupied
+  ---
+  duration_ms: 40.681105
+  type: 'test'
+  ...
+# Subtest: API17 admitting an already-admitted patient returns 409
+ok 17 - API17 admitting an already-admitted patient returns 409
+  ---
+  duration_ms: 13.837104
+  type: 'test'
+  ...
+# Subtest: API18 admitting someone into the occupied room returns 409
+ok 18 - API18 admitting someone into the occupied room returns 409
+  ---
+  duration_ms: 6.629892
+  type: 'test'
+  ...
+# Subtest: API19 discharge calls the stored procedure, frees the room and generates a bill
+ok 19 - API19 discharge calls the stored procedure, frees the room and generates a bill
+  ---
+  duration_ms: 19.041044
+  type: 'test'
+  ...
+# Subtest: API20 overpayment is rejected by the database trigger
+ok 20 - API20 overpayment is rejected by the database trigger
+  ---
+  duration_ms: 14.052154
+  type: 'test'
+  ...
+# Subtest: API21 partial then full payment moves bill Unpaid -> Partially Paid -> Paid
+ok 21 - API21 partial then full payment moves bill Unpaid -> Partially Paid -> Paid
+  ---
+  duration_ms: 23.811052
+  type: 'test'
+  ...
+# Subtest: API22 prescription with a duplicate medicine rolls back completely (409)
+ok 22 - API22 prescription with a duplicate medicine rolls back completely (409)
+  ---
+  duration_ms: 19.324735
+  type: 'test'
+  ...
+# Subtest: API23 valid multi-medicine prescription is saved (201)
+ok 23 - API23 valid multi-medicine prescription is saved (201)
+  ---
+  duration_ms: 6.820936
+  type: 'test'
+  ...
+# Subtest: API24 entering a lab result completes the test and flags abnormal values
+ok 24 - API24 entering a lab result completes the test and flags abnormal values
+  ---
+  duration_ms: 20.707414
+  type: 'test'
+  ...
+# Subtest: API25 semantic triage routes a cardiac complaint to Cardiology with zero keyword overlap
+ok 25 - API25 semantic triage routes a cardiac complaint to Cardiology with zero keyword overlap
+  ---
+  duration_ms: 24.551421
+  type: 'test'
+  ...
+# Subtest: API26 semantic triage routes a paediatric seizure to Pediatrics/Neurology
+ok 26 - API26 semantic triage routes a paediatric seizure to Pediatrics/Neurology
+  ---
+  duration_ms: 22.037336
+  type: 'test'
+  ...
+# Subtest: API27 new admission was embedded automatically and has similar cases
+ok 27 - API27 new admission was embedded automatically and has similar cases
+  ---
+  duration_ms: 1511.856668
+  type: 'test'
+  ...
+# Subtest: API28 audit log records who made the change
+ok 28 - API28 audit log records who made the change
+  ---
+  duration_ms: 4.832483
+  type: 'test'
+  ...
+# Subtest: API29 disabling a user invalidates their existing session immediately
+ok 29 - API29 disabling a user invalidates their existing session immediately
+  ---
+  duration_ms: 224.275752
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2607.800913

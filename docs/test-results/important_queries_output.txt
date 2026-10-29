@@ -1,0 +1,180 @@
+SET
+ admission_id | admission_date | discharge_date |                            reason                            |      doctor       | department_name | room_number | from_date  |  to_date   
+--------------+----------------+----------------+--------------------------------------------------------------+-------------------+-----------------+-------------+------------+------------
+           35 | 2026-03-06     | 2026-03-12     | Leukaemia with low blood counts and recurrent infections     | Dr. Sneha Das     | Oncology        | 104         | 2026-03-06 | 2026-03-12
+           11 | 2026-02-06     | 2026-02-11     | Lower back pain radiating down the leg, lumbar disc prolapse | Dr. Sowmya Shetty | Orthopedics     | 202         | 2026-02-06 | 2026-02-11
+(2 rows)
+
+ department_name  | admissions | avg_stay_days | longest_stay 
+------------------+------------+---------------+--------------
+ Gastroenterology |         34 |           5.0 |            9
+ Orthopedics      |         28 |           5.3 |            9
+ General Medicine |         28 |           4.1 |            9
+ Pulmonology      |         22 |           5.9 |            9
+ Neurology        |         21 |           4.4 |            8
+ Cardiology       |         18 |           6.1 |            9
+(6 rows)
+
+        name        |     department_name     | completed 
+--------------------+-------------------------+-----------
+ Dr. Sneha Das      | Oncology                |        21
+ Dr. Rahul Joshi    | Obstetrics & Gynecology |        17
+ Dr. Vikram Hegde   | Gastroenterology        |        16
+ Dr. Mohan Krishnan | Pulmonology             |        15
+ Dr. Priya Menon    | Cardiology              |        14
+ Dr. Ananya Menon   | Pediatrics              |        14
+ Dr. Sanjay Bhat    | ENT                     |        14
+ Dr. Manoj Kulkarni | Dermatology             |        14
+ Dr. Vikram Das     | General Medicine        |        12
+ Dr. Sowmya Shetty  | Orthopedics             |        11
+ Dr. Nikhil Patel   | Nephrology              |        11
+ Dr. Revathi Desai  | Neurology               |        10
+ Dr. Lakshmi Hegde  | Neurology               |        10
+ Dr. Pranav Gupta   | General Medicine        |         9
+(14 rows)
+
+ patient_id | first_name | last_name | phone_number 
+------------+------------+-----------+--------------
+         30 | Nandini    | Kulkarni  | 6913341232
+         75 | Mohan      | Verma     | 8527177449
+         99 | Pooja      | Nair      | 9868144739
+        113 | Kavya      | Rao       | 8585239868
+        126 | Aishwarya  | Joshi     | 7874315274
+        136 | Anjali     | Das       | 9337524310
+        149 | Ganesh     | Hegde     | 9700886008
+        150 | Lavanya    | Krishnan  | 9211823398
+        195 | Gayathri   | Kumar     | 8105648149
+(9 rows)
+
+ patient_id |        name         
+------------+---------------------
+          4 | Shruti Iyer
+         10 | Ravi Joshi
+         11 | Gayathri Joshi
+         20 | Sowmya Iyer
+         23 | Rohan Subramanian
+         30 | Nandini Kulkarni
+         31 | Lakshmi Sharma
+         41 | Sowmya Das
+         60 | Kavya Naidu
+         61 | Anjali Reddy
+         64 | Revathi Rao
+         68 | Ashwin Subramanian
+         73 | Pooja Pillai
+         76 | Kiran Reddy
+         80 | Nikhil Das
+         82 | Suresh Rao
+         89 | Naveen Chatterjee
+         99 | Pooja Nair
+        103 | Divya Rao
+        109 | Rohan Naidu
+        114 | Rahul Rao
+        121 | Harish Hegde
+        124 | Nandini Subramanian
+        144 | Radha Desai
+        177 | Bhavana Bhat
+        187 | Aditya Rao
+        203 | Harish Reddy
+        214 | Radha Hegde
+        219 | Kavya Verma
+        221 | Test Patient
+(30 rows)
+
+   month    |  revenue  | running_total | change_vs_prev 
+------------+-----------+---------------+----------------
+ 2026-02-01 | 380400.00 |     380400.00 |               
+ 2026-03-01 | 542800.00 |     923200.00 |      162400.00
+ 2026-04-01 | 438450.00 |    1361650.00 |     -104350.00
+ 2026-05-01 | 575500.00 |    1937150.00 |      137050.00
+ 2026-06-01 | 788600.00 |    2725750.00 |      213100.00
+ 2026-07-01 | 434000.00 |    3159750.00 |     -354600.00
+ 2026-08-01 | 711300.00 |    3871050.00 |      277300.00
+ 2026-09-01 | 718350.00 |    4589400.00 |        7050.00
+ 2026-10-01 | 349500.00 |    4938900.00 |     -368850.00
+(9 rows)
+
+     department_name     |      medicine_name      | times_prescribed | rnk 
+-------------------------+-------------------------+------------------+-----
+ Cardiology              | Aspirin                 |               11 |   1
+ Cardiology              | Clopidogrel             |               11 |   1
+ Cardiology              | Amlodipine              |               10 |   3
+ Dermatology             | Clobetasol Cream        |               11 |   1
+ Dermatology             | Cetirizine              |                8 |   2
+ Dermatology             | Cephalexin              |                7 |   3
+ ENT                     | Cetirizine              |               14 |   1
+ ENT                     | Amoxicillin-Clavulanate |               11 |   2
+ ENT                     | Fluticasone Nasal Spray |               10 |   3
+ Gastroenterology        | Ondansetron             |               15 |   1
+ Gastroenterology        | Ursodeoxycholic Acid    |                9 |   2
+ Gastroenterology        | Mesalamine              |                7 |   3
+ Gastroenterology        | Pantoprazole            |                7 |   3
+ General Medicine        | Ferrous Sulphate        |                7 |   1
+ General Medicine        | ORS                     |                7 |   1
+ General Medicine        | Metformin               |                5 |   3
+ Nephrology              | Erythropoietin          |               11 |   1
+ Nephrology              | Furosemide              |                9 |   2
+ Nephrology              | Sodium Bicarbonate      |                8 |   3
+ Neurology               | Levodopa-Carbidopa      |               13 |   1
+ Neurology               | Levetiracetam           |               12 |   2
+ Neurology               | Sumatriptan             |               11 |   3
+ Obstetrics & Gynecology | Iron + Folic Acid       |               14 |   1
+ Obstetrics & Gynecology | Folic Acid              |               12 |   2
+ Obstetrics & Gynecology | Labetalol               |                9 |   3
+ Oncology                | Filgrastim              |               15 |   1
+ Oncology                | Dexamethasone           |               11 |   2
+ Oncology                | Ondansetron             |                7 |   3
+ Orthopedics             | Calcium + Vitamin D3    |                7 |   1
+ Orthopedics             | Paracetamol             |                7 |   1
+ Orthopedics             | Diclofenac              |                6 |   3
+ Pediatrics              | Amoxicillin Syrup       |               12 |   1
+ Pediatrics              | Zinc Syrup              |               10 |   2
+ Pediatrics              | Paracetamol Syrup       |                7 |   3
+ Pulmonology             | Salbutamol Inhaler      |               14 |   1
+ Pulmonology             | Budesonide Inhaler      |               14 |   1
+ Pulmonology             | Azithromycin            |               12 |   3
+(37 rows)
+
+  room_type   | occupied | available | maintenance | occupancy_pct 
+--------------+----------+-----------+-------------+---------------
+ Private      |        4 |         3 |           1 |          50.0
+ General      |        4 |         9 |           1 |          28.6
+ ICU          |        1 |         5 |           0 |          16.7
+ Semi-Private |        1 |         9 |           0 |          10.0
+(4 rows)
+
+   bucket   | bills | outstanding 
+------------+-------+-------------
+ 0-30 days  |     3 |    28400.00
+ 31-60 days |     5 |    71250.00
+ 61-90 days |     6 |    48700.00
+ 90+ days   |    54 |   592450.00
+(4 rows)
+
+ admission_id |                          reason                           |    rank    
+--------------+-----------------------------------------------------------+------------
+            9 | Fracture of the right femur after a fall at home          | 0.06079271
+           16 | Fracture of the right femur after a fall at home          | 0.06079271
+           71 | Hip fracture in elderly woman, surgical fixation          | 0.06079271
+          116 | Fracture of the right femur after a fall at home          | 0.06079271
+          118 | Fracture of the right femur after a fall at home          | 0.06079271
+          181 | Hip fracture in elderly woman, surgical fixation          | 0.06079271
+          204 | Wrist fracture after slipping on stairs, cast application | 0.06079271
+          209 | Fracture of the right femur after a fall at home          | 0.06079271
+          225 | Fracture of the right femur after a fall at home          | 0.06079271
+          223 | Hip fracture in elderly woman, surgical fixation          | 0.06079271
+(10 rows)
+
+ patient_id |     name     |   score    
+------------+--------------+------------
+        202 | Ananya Rao   |  0.3529412
+        123 | Ananya Nair  | 0.33333334
+         98 | Ananya Desai | 0.31578946
+        199 | Ananya Reddy | 0.31578946
+(4 rows)
+
+                                                     QUERY PLAN                                                     
+--------------------------------------------------------------------------------------------------------------------
+ Index Scan using ix_appt_doctor_date on appointment  (cost=0.28..8.30 rows=1 width=66)
+   Index Cond: ((doctor_id = 3) AND (appointment_date >= CURRENT_DATE) AND (appointment_date < (CURRENT_DATE + 1)))
+(2 rows)
+

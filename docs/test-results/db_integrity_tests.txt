@@ -1,0 +1,172 @@
+SET
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_true 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_true 
+-------------
+ 
+(1 row)
+
+ expect_true 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ expect_fail 
+-------------
+ 
+(1 row)
+
+ id | outcome |                                    test                                     |                                           detail                                           
+----+---------+-----------------------------------------------------------------------------+--------------------------------------------------------------------------------------------
+  1 | PASS    | TC01 invalid phone number rejected (domain phone_no)                        | value for domain phone_no violates check constraint "phone_no_check"
+  2 | PASS    | TC02 invalid gender rejected (CHECK)                                        | new row for relation "patient" violates check constraint "patient_gender_check"
+  3 | PASS    | TC03 future date of birth rejected (trigger)                                | date_of_birth 2026-11-05 is in the future
+  4 | PASS    | TC04 digits in a name rejected (CHECK regex)                                | new row for relation "patient" violates check constraint "patient_first_name_check"
+  5 | PASS    | TC05 invalid e-mail rejected (ALTER-added CHECK)                            | new row for relation "patient" violates check constraint "ck_patient_email"
+  6 | PASS    | TC06 negative room tariff rejected (domain money_inr)                       | value for domain money_inr violates check constraint "money_inr_check"
+  7 | PASS    | TC07 cheap ICU rejected (ck_icu_min_charge)                                 | new row for relation "room" violates check constraint "ck_icu_min_charge"
+  8 | PASS    | TC08 discharge before admission rejected (CHECK)                            | new row for relation "admission" violates check constraint "ck_discharge_after_admit"
+  9 | PASS    | TC09 appointment for non-existent patient rejected (FK)                     | insert or update on table "appointment" violates foreign key constraint "appointment_patie
+ 10 | PASS    | TC10 deleting a department that has doctors rejected (FK RESTRICT)          | update or delete on table "department" violates foreign key constraint "doctor_department_
+ 11 | PASS    | TC11 same medicine twice on one prescription rejected (composite PK)        | duplicate key value violates unique constraint "medication_pkey"
+ 12 | PASS    | TC12 duplicate room number rejected (UNIQUE)                                | duplicate key value violates unique constraint "room_room_number_key"
+ 13 | PASS    | TC13 doctor account without doctor link rejected (ck_doctor_link)           | new row for relation "app_user" violates check constraint "ck_doctor_link"
+ 14 | PASS    | TC14 appointment in the past rejected (trigger)                             | Cannot schedule an appointment in the past (2026-10-25 10:10:05.328978)
+ 15 | PASS    | TC15 overlapping slot for same doctor rejected (EXCLUDE)                    | conflicting key value violates exclusion constraint "ex_doctor_slot"
+ 16 | PASS    | TC16 same slot allowed for a different doctor                               | WITH ins AS (INSERT INTO appointment (patient_id, doctor_id, appointment_date)            +
+    |         |                                                                             |            
+ 17 | PASS    | TC17 admitting into an occupied room rejected (fn_admit_patient)            | Room 20 is Occupied
+ 18 | PASS    | TC18 admitting into a maintenance room rejected                             | Room 14 is Maintenance
+ 19 | PASS    | TC19 second open admission for same patient rejected (partial unique index) | duplicate key value violates unique constraint "uq_one_open_admission"
+ 20 | PASS    | TC20 overlapping allocation of a room rejected (EXCLUDE daterange)          | conflicting key value violates exclusion constraint "ex_room_overlap"
+ 21 | PASS    | TC21 admission marks room Occupied (trigger)                                | SELECT availability = 'Occupied' FROM room WHERE room_id = 29
+ 22 | PASS    | TC22 discharge frees the room (trigger)                                     | SELECT availability = 'Available' FROM room WHERE room_id = 29
+ 23 | PASS    | TC23 bill = 3 days x 5500 + 3 days x 500 visit fee = 18000                  | SELECT total_amount = 18000 FROM bill WHERE bill_id = 285
+ 24 | PASS    | TC24 discharging twice rejected (procedure)                                 | Admission 237 already discharged on 2026-10-26
+ 25 | PASS    | TC25 overpayment rejected (trigger)                                         | Payment 18000.01 exceeds outstanding amount 18000.00 on bill 285
+ 26 | PASS    | TC26 partial payment sets status Partially Paid (trigger)                   | SELECT status = 'Partially Paid' FROM bill WHERE bill_id = 285
+ 27 | PASS    | TC27 full payment sets status Paid (trigger)                                | SELECT status = 'Paid' FROM bill WHERE bill_id = 285
+ 28 | PASS    | TC28 payment on a Paid bill rejected (trigger)                              | Bill 285 is Paid and cannot accept payments
+ 29 | PASS    | TC29 audit log captured the discharge (audit trigger)                       | SELECT count(*) >= 1 FROM audit_log WHERE table_name = 'admission' AND operation = 'UPDATE
+ 30 | PASS    | TC30 failed admit leaves no orphan admission (atomicity)                    | SELECT NOT EXISTS (SELECT 1 FROM admission WHERE reason = 'Duplicate admission')
+ 31 | PASS    | TC31 fn_is_abnormal flags 250 against 70-110                                | SELECT fn_is_abnormal('250','70-110') AND NOT fn_is_abnormal('90','70-110')
+ 32 | PASS    | TC32 adding a result completes the test (trigger)                           | SELECT status = 'Completed' FROM test WHERE test_id = 262
+ 33 | PASS    | TC33 app role cannot DROP tables (least privilege)                          | must be owner of table room
+ 34 | PASS    | TC34 app role cannot tamper with audit log                                  | permission denied for table audit_log
+ 35 | PASS    | TC35 read-only role cannot read password hashes                             | permission denied for table app_user
+(35 rows)
+
+ passed | failed | total 
+--------+--------+-------
+     35 |      0 |    35
+(1 row)
+
+ROLLBACK

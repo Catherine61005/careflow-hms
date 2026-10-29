@@ -1,0 +1,24 @@
+digraph A {
+  rankdir=LR; fontname="Helvetica"; node [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#0f766e"]; edge [fontname="Helvetica", fontsize=9, color="#475467"];
+  label="CareFlow HMS - System Architecture"; labelloc=t; fontsize=18;
+  subgraph cluster_client { label="Browser"; style="rounded,dashed"; color="#98a2b3";
+    ui [label="Next.js client pages\n(React, role-aware UI)\nDashboard · Triage · Patients · Appointments\nAdmissions · Rooms · Labs/Rx · Billing · Reports · Admin"]; }
+  subgraph cluster_server { label="Next.js 16 server (Node.js)"; style="rounded"; color="#0f766e"; fillcolor="#f0fdfa"; style="rounded,filled";
+    proxy [label="proxy.ts\nredirect if no valid session"];
+    api [label="Route Handlers  /api/*\nzod validation · requireRole() RBAC\nPG error -> HTTP mapping"];
+    auth [label="lib/auth\nbcrypt + JWT (HS256)\nhttpOnly cookie"];
+    dbl [label="lib/db\npg Pool · parameterised SQL\nwithTransaction() + audit actor"];
+    emb [label="lib/embeddings\ntransformers.js (ONNX)\nall-MiniLM-L6-v2 -> 384-d"];
+  }
+  subgraph cluster_db { label="PostgreSQL 16  (role hms_app, least privilege)"; style="rounded,filled"; fillcolor="#eff8ff"; color="#175cd3";
+    rel [label="Relational schema 'hms'\n14 clinical tables + app_user + audit_log\nPK/FK · CHECK · domains · EXCLUDE"];
+    logic [label="Server-side logic\nfn_admit_patient · sp_discharge_patient\n7 triggers · 5 views + 1 materialized view"];
+    vec [label="pgvector\nclinical_embedding(vector(384))\nHNSW index · cosine <=>", fillcolor="#fef6ee", color="#b54708"];
+    fts [label="Full-text (GIN tsvector)\nTrigram (pg_trgm)"];
+  }
+  env [label=".env.local\nDATABASE_URL · JWT_SECRET", shape=note, fillcolor="#fffbea"];
+  ui -> proxy [label="page request"]; ui -> api [label="fetch JSON"];
+  api -> auth; api -> dbl; api -> emb [label="triage text /\nnew admission"];
+  dbl -> rel; dbl -> logic; dbl -> vec [label="k-NN"]; dbl -> fts;
+  env -> dbl [style=dashed]; env -> auth [style=dashed];
+}
