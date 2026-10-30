@@ -9,6 +9,8 @@ SET search_path TO hms, public;
 ALTER TABLE patient
     ADD COLUMN email VARCHAR(120)
     CONSTRAINT ck_patient_email CHECK (email IS NULL OR email ~* '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$');
+-- Front desk searches by (part of) an e-mail address -> trigram index serves ILIKE '%...%'
+CREATE INDEX ix_patient_email_trgm ON patient USING gin (email gin_trgm_ops);
 
 -- 2) Front desk records the presenting complaint at booking time
 --    (free text -> also searchable with full-text search)

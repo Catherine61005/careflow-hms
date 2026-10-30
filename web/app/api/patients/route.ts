@@ -13,16 +13,19 @@ export const GET = api(async (req) => {
   const page = Math.max(1, Number(u.searchParams.get("page")) || 1);
   const size = 20;
 
-  // Search: exact id / phone match, substring, or trigram similarity (typo tolerant)
+  // Search: exact id / phone match, substring, trigram similarity (typo tolerant) or e-mail
   const rows = await query(`
-    SELECT patient_id, full_name, gender, age, phone_number, is_admitted, last_visit, outstanding_due,
+    SELECT v.patient_id, v.full_name, v.gender, v.age, v.phone_number, p.email,
+           v.is_admitted, v.last_visit, v.outstanding_due,
            COUNT(*) OVER () AS total
       FROM v_patient_summary v
+      JOIN patient p ON p.patient_id = v.patient_id
      WHERE ($1::text IS NULL
             OR v.patient_id::text = $1
             OR v.phone_number LIKE '%' || $1 || '%'
             OR v.full_name ILIKE '%' || $1 || '%'
-            OR v.full_name % $1)
+            OR v.full_name % $1
+            OR p.email ILIKE '%' || $1 || '%')
        AND ($2::text IS NULL OR v.gender = $2)
        AND ($3::text IS NULL OR v.is_admitted = ($3 = 'true'))
      ORDER BY CASE WHEN $1::text IS NULL THEN 0 ELSE 1 - similarity(v.full_name, $1) END, v.patient_id DESC

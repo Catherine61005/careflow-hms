@@ -23,7 +23,7 @@ export default function Patients() {
       </div>
       <div className="card">
         <div className="filters">
-          <input placeholder="Name, phone or ID" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} style={{ minWidth: 260 }} />
+          <input placeholder="Name, phone, e-mail or ID" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} style={{ minWidth: 260 }} />
           <select value={gender} onChange={(e) => { setGender(e.target.value); setPage(1); }}>
             <option value="">All genders</option><option>Male</option><option>Female</option><option>Other</option></select>
           <select value={admitted} onChange={(e) => { setAdmitted(e.target.value); setPage(1); }}>
@@ -37,7 +37,8 @@ export default function Patients() {
             {data?.rows.map((p: any) => (
               <tr key={p.patient_id}>
                 <td>#{p.patient_id}</td>
-                <td><Link href={`/patients/${p.patient_id}`}><b>{p.full_name}</b></Link></td>
+                <td><Link href={`/patients/${p.patient_id}`}><b>{p.full_name}</b></Link>
+                  {p.email && <div className="muted small">{p.email}</div>}</td>
                 <td>{p.gender}</td><td className="num">{p.age}</td><td>{p.phone_number}</td>
                 <td>{p.is_admitted ? <span className="badge b-warn">Admitted</span> : <span className="badge">Outpatient</span>}</td>
                 <td>{fdate(p.last_visit)}</td>

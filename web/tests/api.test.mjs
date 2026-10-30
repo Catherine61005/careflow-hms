@@ -257,3 +257,11 @@ test("API32 doctor and anonymous clients cannot export bills", async () => {
   assert.equal((await fetch(`${BASE}/api/bills?format=csv`, { headers: { Cookie: cookie } })).status, 403);
   assert.equal((await fetch(`${BASE}/api/bills?format=csv`)).status, 401);
 });
+
+test("API33 patient search matches part of an e-mail address", async () => {
+  const r = await rec("GET", `/api/patients?q=${encodeURIComponent("test.patient@example")}`);
+  assert.equal(r.status, 200);
+  const hit = r.body.rows.find((p) => p.patient_id === patientId);
+  assert.ok(hit);
+  assert.equal(hit.email, "test.patient@example.com");
+});
