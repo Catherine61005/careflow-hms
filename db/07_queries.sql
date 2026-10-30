@@ -111,3 +111,21 @@ SELECT patient_id, first_name || ' ' || last_name AS name,
 -- Q13 Index proof: the composite index serves a doctor's daily schedule
 EXPLAIN SELECT * FROM appointment
  WHERE doctor_id = 3 AND appointment_date >= CURRENT_DATE AND appointment_date < CURRENT_DATE + 1;
+
+-- Q14 (CTE + window AVG + DENSE_RANK) Average completed stay by department.
+-- Exclude ongoing admissions; same-day discharges count as zero elapsed days.
+-- Group before ranking so each department contributes exactly one result row.
+WITH department_stays AS (
+    SELECT dep.department_id, dep.department_name, COUNT(*) AS completed_admissions,
+           AVG(a.discharge_date - a.admission_date) AS avg_stay_days
+      FROM admission a
+      JOIN doctor d ON d.doctor_id = a.doctor_id
+      JOIN department dep ON dep.department_id = d.department_id
+     WHERE a.discharge_date IS NOT NULL
+     GROUP BY dep.department_id, dep.department_name
+)
+SELECT department_name, completed_admissions, ROUND(avg_stay_days, 2) AS avg_stay_days,
+       DENSE_RANK() OVER (ORDER BY avg_stay_days DESC) AS stay_rank,
+       ROUND(AVG(avg_stay_days) OVER (), 2) AS mean_department_stay_days
+  FROM department_stays
+ ORDER BY stay_rank, department_name;

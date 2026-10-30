@@ -1,0 +1,47 @@
+SET
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=16.09..16.12 rows=12 width=124) (actual time=0.312..0.315 rows=12 loops=1)
+   Sort Key: (dense_rank() OVER (?)), department_stays.department_name
+   Sort Method: quicksort  Memory: 26kB
+   Buffers: shared hit=17
+   ->  WindowAgg  (cost=15.45..15.87 rows=12 width=124) (actual time=0.263..0.267 rows=12 loops=1)
+         Buffers: shared hit=11
+         ->  WindowAgg  (cost=15.45..15.66 rows=12 width=60) (actual time=0.252..0.258 rows=12 loops=1)
+               Buffers: shared hit=11
+               ->  Sort  (cost=15.45..15.48 rows=12 width=52) (actual time=0.246..0.248 rows=12 loops=1)
+                     Sort Key: department_stays.avg_stay_days DESC
+                     Sort Method: quicksort  Memory: 25kB
+                     Buffers: shared hit=11
+                     ->  Subquery Scan on department_stays  (cost=14.96..15.23 rows=12 width=52) (actual time=0.206..0.220 rows=12 loops=1)
+                           Buffers: shared hit=8
+                           ->  HashAggregate  (cost=14.96..15.11 rows=12 width=56) (actual time=0.205..0.218 rows=12 loops=1)
+                                 Group Key: dep.department_id
+                                 Batches: 1  Memory Usage: 24kB
+                                 Buffers: shared hit=8
+                                 ->  Hash Join  (cost=2.94..12.73 rows=223 width=24) (actual time=0.051..0.156 rows=223 loops=1)
+                                       Hash Cond: (d.department_id = dep.department_id)
+                                       Buffers: shared hit=8
+                                       ->  Hash Join  (cost=1.68..10.67 rows=223 width=12) (actual time=0.029..0.112 rows=223 loops=1)
+                                             Hash Cond: (a.doctor_id = d.doctor_id)
+                                             Buffers: shared hit=7
+                                             ->  Seq Scan on admission a  (cost=0.00..8.33 rows=223 width=12) (actual time=0.009..0.068 rows=223 loops=1)
+                                                   Filter: (discharge_date IS NOT NULL)
+                                                   Rows Removed by Filter: 10
+                                                   Buffers: shared hit=6
+                                             ->  Hash  (cost=1.30..1.30 rows=30 width=8) (actual time=0.007..0.007 rows=30 loops=1)
+                                                   Buckets: 1024  Batches: 1  Memory Usage: 10kB
+                                                   Buffers: shared hit=1
+                                                   ->  Seq Scan on doctor d  (cost=0.00..1.30 rows=30 width=8) (actual time=0.001..0.003 rows=30 loops=1)
+                                                         Buffers: shared hit=1
+                                       ->  Hash  (cost=1.12..1.12 rows=12 width=16) (actual time=0.012..0.012 rows=12 loops=1)
+                                             Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                             Buffers: shared hit=1
+                                             ->  Seq Scan on department dep  (cost=0.00..1.12 rows=12 width=16) (actual time=0.003..0.003 rows=12 loops=1)
+                                                   Buffers: shared hit=1
+ Planning:
+   Buffers: shared hit=313
+ Planning Time: 0.919 ms
+ Execution Time: 0.445 ms
+(42 rows)
+
