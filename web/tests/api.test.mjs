@@ -219,3 +219,41 @@ test("API29 disabling a user invalidates their existing session immediately", as
   await admin("PATCH", `/api/admin/users/${created.body.user_id}`, { is_active: false });
   assert.equal((await temp("GET", "/api/patients")).status, 401);
 });
+
+// ---------------------------------------------------------------- inpatient / finance improvements
+test("API30 ward occupancy is independent of the availability filter", async () => {
+  const all = await rec("GET", "/api/rooms");
+  const filtered = await rec("GET", "/api/rooms?availability=Available");
+  assert.deepEqual(filtered.body.occupancy, all.body.occupancy);
+  for (const ward of all.body.occupancy) {
+    const rooms = all.body.rows.filter((r) => r.room_type === ward.room_type);
+    const occupied = rooms.filter((r) => r.availability === "Occupied").length;
+    assert.equal(ward.total, rooms.length);
+    assert.equal(ward.occupied, occupied);
+    assert.equal(Number(ward.occupancy_pct), Math.round(1000 * occupied / rooms.length) / 10);
+  }
+});
+
+test("API31 CSV exports all matching bills beyond the screen's 200 row limit", async () => {
+  const { cookie } = await login("reception", "Reception@123");
+  const r = await fetch(`${BASE}/api/bills?format=csv`, { headers: { Cookie: cookie } });
+  assert.equal(r.status, 200);
+  assert.match(r.headers.get("content-type"), /text\/csv/);
+  assert.match(r.headers.get("content-disposition"), /attachment/);
+  const lines = (await r.text()).trim().split("\r\n");
+  const json = await rec("GET", "/api/bills");
+  const total = json.body.summary.reduce((n, s) => n + s.bills, 0);
+  assert.equal(lines.length - 1, total);
+  assert.ok(total > 200, "seed exercises export beyond UI limit");
+  const paidId = (await rec("GET", "/api/bills?status=Paid")).body.rows[0].bill_id;
+  const single = await fetch(`${BASE}/api/bills?format=csv&q=${paidId}&status=Paid`, { headers: { Cookie: cookie } });
+  const singleLines = (await single.text()).trim().split("\r\n");
+  assert.equal(singleLines.length, 2);
+  assert.ok(singleLines[1].startsWith(`"${paidId}",`));
+});
+
+test("API32 doctor and anonymous clients cannot export bills", async () => {
+  const { cookie } = await login(DOCTOR_USER, "Doctor@123");
+  assert.equal((await fetch(`${BASE}/api/bills?format=csv`, { headers: { Cookie: cookie } })).status, 403);
+  assert.equal((await fetch(`${BASE}/api/bills?format=csv`)).status, 401);
+});

@@ -26,6 +26,9 @@ export default function Billing() {
             <button key={s} className={`btn sm ${status === s ? "" : "ghost"}`} onClick={() => setStatus(s)}>{s || "All"}</button>))}
           <input placeholder="Patient name or bill #" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
+        <p className="small muted">Showing up to 200 matching bills. CSV exports all matching bills.</p>
+        <a className="btn ghost sm" style={{ marginBottom: 12 }}
+          href={`/api/bills?${new URLSearchParams({ status, q, format: "csv" })}`}>Export matching bills (CSV)</a>
         <div className="tbl-wrap"><table>
           <thead><tr><th>Bill</th><th>Date</th><th>Patient</th><th>Type</th><th className="num">Total</th><th className="num">Paid</th><th className="num">Outstanding</th><th className="num">Age</th><th>Status</th><th></th></tr></thead>
           <tbody>{data?.rows.map((b: any) => (

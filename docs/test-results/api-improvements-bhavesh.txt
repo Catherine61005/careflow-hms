@@ -1,0 +1,11 @@
+✔ API30 ward occupancy is independent of the availability filter (367.028833ms)
+✔ API31 CSV exports all matching bills beyond the screen's 200 row limit (240.909875ms)
+✔ API32 doctor and anonymous clients cannot export bills (81.748417ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 799.474583

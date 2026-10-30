@@ -17,6 +17,15 @@ export default function Rooms() {
       <h1>Rooms</h1>
       <p className="sub">Live ward board from view <span className="mono">v_current_occupancy</span>. Availability is set by triggers on room allocation.</p>
       {node}
+      <div className="kpis">
+        {data?.occupancy.map((ward: any) => (
+          <div className="kpi" key={ward.room_type}>
+            <div className="l">{ward.room_type} occupancy</div>
+            <div className="v">{ward.occupancy_pct}%</div>
+            <div className="small muted">{ward.occupied} / {ward.total} rooms occupied (includes maintenance in total)</div>
+          </div>
+        ))}
+      </div>
       <div className="filters">
         {["", "Available", "Occupied", "Maintenance"].map((f) => (
           <button key={f} className={`btn sm ${filter === f ? "" : "ghost"}`} onClick={() => setFilter(f)}>{f || "All"}</button>))}
