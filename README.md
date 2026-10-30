@@ -67,15 +67,15 @@ db/
   04_roles.sql               database roles hms_app / hms_readonly (least privilege)
   05_alter_migration.sql     ALTER / DROP schema evolution
   06_seed.sql                generated demo data (dates relative to CURRENT_DATE)
-  07_queries.sql             13 important queries (JOIN, GROUP BY/HAVING, subqueries, CTE, window, FTS, EXPLAIN)
+  07_queries.sql             14 important queries (JOIN, GROUP BY/HAVING, subqueries, CTE, window, FTS, EXPLAIN)
   seed/generate_seed.py      deterministic seed generator
-  tests/integrity_tests.sql  35 database test cases (self-rolling-back)
+  tests/integrity_tests.sql  38 database test cases (self-rolling-back)
   docker-init.sh             first-start initialisation for docker compose
 web/
   app/(app)/...              UI pages        app/api/...   backend API (Route Handlers)
   lib/                       db, auth, http errors, validators, embeddings, vector store
   scripts/setup-db.mjs       cross-platform DB setup      scripts/embed-backfill.mjs  vector backfill
-  tests/api.test.mjs         29 end-to-end API tests
+  tests/api.test.mjs         32 end-to-end API tests
 docs/                        ER diagram, relational schema, architecture, screenshots, test outputs
 ```
 
@@ -95,6 +95,16 @@ npm install
 npm run embed                        # downloads the embedding model once (~90 MB) and fills the vector store
 npm run dev                          # http://localhost:3000
 ```
+
+If Docker reports `/bin/bash: bad interpreter: Permission denied` while running the
+initialization script, and the new database has no `hms` schema, initialize it explicitly:
+
+```bash
+docker exec careflow-db bash /hms-db/docker-init.sh
+```
+
+This script drops and recreates the HMS schema. Use this recovery only for a new,
+empty development database; do not run it against data you want to keep.
 
 ### Option B — Local PostgreSQL
 
@@ -122,12 +132,12 @@ These are demo credentials created by the seed; change them before any real use.
 ## Tests
 
 ```bash
-psql "$DATABASE_ADMIN_URL" -f db/tests/integrity_tests.sql   # 35 DB tests, rolled back after running
+psql "$DATABASE_ADMIN_URL" -f db/tests/integrity_tests.sql   # 38 DB tests, rolled back after running
 cd web && npm run build && npm start &                        # or npm run dev
-npm test                                                      # 29 API tests (writes demo rows)
+npm test                                                      # 32 API tests (writes demo rows)
 ```
 
-Latest results are in `docs/test-results/` (35/35 and 29/29 passing).
+Latest results are in `docs/test-results/` (see the dated run notes for the latest counts).
 
 ## Requirement coverage
 

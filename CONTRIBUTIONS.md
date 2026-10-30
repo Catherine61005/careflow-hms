@@ -10,12 +10,12 @@ Each member commits their own files from their own GitHub account so the commit 
 - `fn_calculate_bill`, `fn_bill_outstanding`, `fn_admit_patient`, `fn_transfer_room`, `sp_discharge_patient`
 - Triggers: room availability (T3), payment validation (T4), bill status (T5)
 - Views: `v_current_occupancy`, `v_bill_status`, `mv_monthly_department_revenue`; `fn_refresh_revenue`
-- Queries Q1, Q2, Q6, Q8, Q9 in `07_queries.sql`; integrity tests TC17–TC30
+- Queries Q1, Q2, Q6, Q8, Q9, Q14 in `07_queries.sql`; integrity tests TC17–TC30, TC36–TC38
 
 **Application**
 - APIs: `/api/admissions/**`, `/api/rooms/**`, `/api/bills/**`, `/api/reports/revenue`, `/api/dashboard`
 - Pages: Admissions, Rooms, Billing, Reports, Dashboard
-- API tests API16–API21
+- API tests API16–API21, API30–API32
 
 ## Member 2 — Catherine D — PES1UG24CS120 — Outpatient, clinical & triage
 
