@@ -129,3 +129,30 @@ SELECT department_name, completed_admissions, ROUND(avg_stay_days, 2) AS avg_sta
        ROUND(AVG(avg_stay_days) OVER (), 2) AS mean_department_stay_days
   FROM department_stays
  ORDER BY stay_rank, department_name;
+
+-- Q15 (correlated NOT EXISTS + GROUP BY + HAVING) Missed follow-ups.
+-- Completed visits in the last 90 days whose 30-day window has passed, where the
+-- patient has no later Scheduled/Completed appointment in the same department within
+-- 30 days. Departments with at least 2 missed follow-ups, worst first.
+SELECT dep.department_name,
+       COUNT(*)                                  AS missed_follow_ups,
+       COUNT(DISTINCT ap.patient_id)             AS patients,
+       MIN(ap.appointment_date)::date            AS oldest_visit
+  FROM appointment ap
+  JOIN doctor d       ON d.doctor_id = ap.doctor_id
+  JOIN department dep ON dep.department_id = d.department_id
+ WHERE ap.status = 'Completed'
+   AND ap.appointment_date >= CURRENT_DATE - 90
+   AND ap.appointment_date <  CURRENT_DATE - 30
+   AND NOT EXISTS (
+         SELECT 1
+           FROM appointment nxt
+           JOIN doctor nd ON nd.doctor_id = nxt.doctor_id
+          WHERE nxt.patient_id = ap.patient_id
+            AND nd.department_id = d.department_id
+            AND nxt.status IN ('Scheduled', 'Completed')
+            AND nxt.appointment_date >  ap.appointment_date
+            AND nxt.appointment_date <= ap.appointment_date + INTERVAL '30 days')
+ GROUP BY dep.department_name
+HAVING COUNT(*) >= 2
+ ORDER BY missed_follow_ups DESC, dep.department_name;
