@@ -159,6 +159,31 @@ SET LOCAL ROLE hms_readonly;
 SELECT pg_temp.expect_fail('TC35 read-only role cannot read password hashes', $$SELECT password_hash FROM hms.app_user$$);
 RESET ROLE;
 
+-- ---------------------------------------------------------------- transfer / billing edge cases
+-- Dedicated rooms avoid depending on the generated seed's allocation history.
+DO $$
+DECLARE v_pat INT; v_from INT; v_to INT; v_adm INT; v_bill INT;
+BEGIN
+    SELECT patient_id INTO STRICT v_pat FROM patient p
+     WHERE NOT EXISTS (SELECT 1 FROM admission a WHERE a.patient_id = p.patient_id AND a.discharge_date IS NULL)
+     ORDER BY patient_id LIMIT 1;
+    INSERT INTO room (room_number, room_type, charge_per_day) VALUES ('TC36-A', 'General', 1500) RETURNING room_id INTO v_from;
+    INSERT INTO room (room_number, room_type, charge_per_day) VALUES ('TC36-B', 'Private', 5500) RETURNING room_id INTO v_to;
+    v_adm := fn_admit_patient(v_pat, 1, v_from, 'Transfer edge case', CURRENT_DATE - 3);
+    PERFORM fn_transfer_room(v_adm, v_to, CURRENT_DATE - 1);
+    PERFORM pg_temp.expect_true('TC36 transfer frees old room and opens exactly one allocation in new room',
+      format('SELECT (SELECT availability = ''Available'' FROM room WHERE room_id = %s)
+        AND (SELECT availability = ''Occupied'' FROM room WHERE room_id = %s)
+        AND (SELECT count(*) = 1 AND min(room_id) = %s FROM room_allocation WHERE admission_id = %s AND to_date IS NULL)',
+        v_from, v_to, v_to, v_adm));
+    CALL sp_discharge_patient(v_adm, CURRENT_DATE, v_bill);
+    PERFORM pg_temp.expect_true('TC37 transferred stay bills both tariffs plus one visit fee per stay day',
+      format('SELECT total_amount = 10000 FROM bill WHERE bill_id = %s', v_bill));
+    -- The bill is unpaid with a positive balance, so rejection must be about its date.
+    PERFORM pg_temp.expect_fail('TC38 payment dated before bill rejected',
+      format('INSERT INTO payment (bill_id, amount, payment_method, payment_date) VALUES (%s, 1, ''Cash'', CURRENT_DATE - 1)', v_bill));
+END $$;
+
 \set QUIET off
 SELECT id, outcome, test, left(detail, 90) AS detail FROM t_results ORDER BY id;
 SELECT COUNT(*) FILTER (WHERE outcome = 'PASS') AS passed,
