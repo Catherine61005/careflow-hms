@@ -43,8 +43,11 @@ query (for example "similar past cases → their length of stay and bill"). No s
 - **Appointments** — 30-minute slot double-booking blocked by a GiST `EXCLUDE` constraint; past bookings blocked by trigger.
 - **Admissions** — admit (row-locked room + admission + allocation in one transaction), transfer, discharge
   (stored procedure closes the stay, frees the room, generates the bill).
-- **Live ward board** — room availability derived by triggers, never edited by hand.
-- **Billing** — partial / full payments; status maintained by trigger; overpayment rejected by the database.
+- **Patient search** — by name (typo-tolerant), phone, ID or part of an e-mail address; trigram GIN indexes on name and e-mail.
+- **Live ward board** — room availability derived by triggers, never edited by hand; occupancy percentage shown
+  regardless of the room filter.
+- **Billing** — partial / full payments; status maintained by trigger; overpayment rejected by the database;
+  filtered bills export to CSV (admin / receptionist only).
 - **Labs & prescriptions** — results auto-complete tests and abnormal values are flagged; multi-medicine prescriptions
   are all-or-nothing.
 - **Dashboards & reports** — KPIs, GROUP BY/HAVING, window functions, receivables ageing, materialized view.
