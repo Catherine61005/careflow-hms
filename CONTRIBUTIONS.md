@@ -25,13 +25,13 @@ Each member commits their own files from their own GitHub account so the commit 
 - Triggers: DOB (T1), appointment-in-past (T2), result-completes-test (T6), audit (T7); `fn_is_abnormal`, `fn_patient_age`
 - Views: `v_patient_summary`, `v_doctor_schedule`, `v_test_results`; roles in `04_roles.sql`; `05_alter_migration.sql`
 - Vector store design and embedding pipeline (`embed-backfill.mjs`, `lib/embeddings.ts`, `lib/vectorstore.ts`)
-- Queries Q3, Q4, Q5, Q7, Q10–Q13; integrity tests TC01–TC16, TC31–TC35
+- Queries Q3, Q4, Q5, Q7, Q10–Q13, Q15; integrity tests TC01–TC16, TC31–TC35
 
 **Application**
 - Auth & RBAC (`lib/auth.ts`, `proxy.ts`, login, `/api/admin/**`)
 - APIs: `/api/patients/**`, `/api/appointments/**`, `/api/prescriptions`, `/api/tests/**`, `/api/triage`, `/api/doctors`, `/api/departments`
 - Pages: Smart Triage, Patients, Patient detail, Appointments, Prescriptions & Labs, Users & Audit
-- API tests API01–API15, API22–API29
+- API tests API01–API15, API22–API29, API33
 
 ## Shared
 ER diagram and relational schema, seed generator, README, project report.

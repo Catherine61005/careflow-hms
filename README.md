@@ -67,7 +67,7 @@ db/
   04_roles.sql               database roles hms_app / hms_readonly (least privilege)
   05_alter_migration.sql     ALTER / DROP schema evolution
   06_seed.sql                generated demo data (dates relative to CURRENT_DATE)
-  07_queries.sql             14 important queries (JOIN, GROUP BY/HAVING, subqueries, CTE, window, FTS, EXPLAIN)
+  07_queries.sql             15 important queries (JOIN, GROUP BY/HAVING, subqueries, CTE, window, FTS, EXPLAIN)
   seed/generate_seed.py      deterministic seed generator
   tests/integrity_tests.sql  38 database test cases (self-rolling-back)
   docker-init.sh             first-start initialisation for docker compose
@@ -75,7 +75,7 @@ web/
   app/(app)/...              UI pages        app/api/...   backend API (Route Handlers)
   lib/                       db, auth, http errors, validators, embeddings, vector store
   scripts/setup-db.mjs       cross-platform DB setup      scripts/embed-backfill.mjs  vector backfill
-  tests/api.test.mjs         32 end-to-end API tests
+  tests/api.test.mjs         33 end-to-end API tests
 docs/                        ER diagram, relational schema, architecture, screenshots, test outputs
 ```
 
@@ -134,7 +134,7 @@ These are demo credentials created by the seed; change them before any real use.
 ```bash
 psql "$DATABASE_ADMIN_URL" -f db/tests/integrity_tests.sql   # 38 DB tests, rolled back after running
 cd web && npm run build && npm start &                        # or npm run dev
-npm test                                                      # 32 API tests (writes demo rows)
+npm test                                                      # 33 API tests (writes demo rows)
 ```
 
 Latest results are in `docs/test-results/` (see the dated run notes for the latest counts).

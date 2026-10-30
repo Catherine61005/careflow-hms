@@ -10,3 +10,4 @@ node_modules/
 
 # Embedding model files are downloaded by `npm run embed`
 web/models/
+*.tsbuildinfo
