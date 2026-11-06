@@ -12,7 +12,8 @@ export async function indexAdmission(admissionId: number): Promise<void> {
     `INSERT INTO clinical_embedding (source_type, source_id, department_id, content, embedding, model)
      VALUES ('admission', $1, $2, $3, $4::vector, $5)
      ON CONFLICT (source_type, source_id)
-     DO UPDATE SET content = EXCLUDED.content, embedding = EXCLUDED.embedding, created_at = now()`,
+     DO UPDATE SET department_id = EXCLUDED.department_id, content = EXCLUDED.content,
+                   embedding = EXCLUDED.embedding, model = EXCLUDED.model, created_at = now()`,
     [admissionId, a.department_id, a.reason, toVectorLiteral(v), MODEL_NAME]);
 }
 
@@ -27,7 +28,8 @@ export async function semanticSearch(vector: number[], k = 15, excludeAdmission?
     SELECT ce.source_type, ce.source_id, ce.content, ce.department_id, dep.department_name,
            ROUND((1 - (ce.embedding <=> $1::vector))::numeric, 4)::float AS similarity
       FROM clinical_embedding ce JOIN department dep ON dep.department_id = ce.department_id
-     WHERE ($3::int IS NULL OR NOT (ce.source_type = 'admission' AND ce.source_id = $3))
+     WHERE ce.model = $4
+       AND ($3::int IS NULL OR NOT (ce.source_type = 'admission' AND ce.source_id = $3))
      ORDER BY ce.embedding <=> $1::vector
-     LIMIT $2`, [toVectorLiteral(vector), k, excludeAdmission ?? null]);
+     LIMIT $2`, [toVectorLiteral(vector), k, excludeAdmission ?? null, MODEL_NAME]);
 }

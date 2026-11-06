@@ -40,7 +40,8 @@ async function embed(text) {
 const upsert = `INSERT INTO clinical_embedding (source_type, source_id, department_id, content, embedding, model)
                 VALUES ($1, $2, $3, $4, $5::vector, $6)
                 ON CONFLICT (source_type, source_id) DO UPDATE
-                SET content = EXCLUDED.content, embedding = EXCLUDED.embedding, model = EXCLUDED.model, created_at = now()`;
+                SET department_id = EXCLUDED.department_id, content = EXCLUDED.content,
+                    embedding = EXCLUDED.embedding, model = EXCLUDED.model, created_at = now()`;
 
 const profiles = JSON.parse(readFileSync(path.join(here, "../../db/seed/department_profiles.json"), "utf8"));
 const depts = (await client.query("SELECT department_id, department_name FROM department")).rows;
@@ -53,8 +54,9 @@ console.log(`Embedded ${depts.length} department profiles`);
 
 const adms = (await client.query(`
   SELECT a.admission_id, a.reason, d.department_id FROM admission a JOIN doctor d USING (doctor_id)
-   WHERE NOT EXISTS (SELECT 1 FROM clinical_embedding ce WHERE ce.source_type = 'admission' AND ce.source_id = a.admission_id)
-   ORDER BY a.admission_id`)).rows;
+   WHERE NOT EXISTS (SELECT 1 FROM clinical_embedding ce WHERE ce.source_type = 'admission' AND ce.source_id = a.admission_id
+                       AND ce.model = $1 AND ce.department_id = d.department_id AND ce.content = a.reason)
+   ORDER BY a.admission_id`, [MODEL])).rows;
 let n = 0;
 await client.query("BEGIN");
 for (const a of adms) {
