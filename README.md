@@ -4,12 +4,12 @@ DBMS Experiential Learning – Level 3 Project · Department of CSE, PES Univers
 
 Repository: https://github.com/Catherine61005/careflow-hms
 
-| Team member | SRN | Module ownership |
+| Team member | SRN | Presentation ownership |
 |---|---|---|
-| Bhavesh Velluru | PES1UG24CS115 | Inpatient & finance: admissions, rooms, billing, payments, reports |
-| Catherine D | PES1UG24CS120 | Outpatient & clinical: patients, appointments, labs, prescriptions, semantic triage, auth |
+| Bhavesh Velluru | PES1UG24CS115 | Vector database and Next.js: embeddings, Smart Triage, Similar Past Cases |
+| Catherine D | PES1UG24CS120 | Relational SQL and Next.js: schema, integrity, scheduling, admissions, billing |
 
-See [`CONTRIBUTIONS.md`](CONTRIBUTIONS.md) for the file-level split.
+See [`CONTRIBUTIONS.md`](CONTRIBUTIONS.md) for the timed demo split, GitHub evidence, and vector demo checklist.
 
 ## Problem statement
 
