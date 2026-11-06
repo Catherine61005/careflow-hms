@@ -20,7 +20,11 @@ async function load(): Promise<FeatureExtractionPipeline> {
 }
 
 export async function embed(text: string): Promise<number[]> {
-  g.embedder ??= load();
+  g.embedder ??= load().catch((error) => {
+    // Keep one shared load attempt, but let a later request retry a failed load.
+    delete g.embedder;
+    throw error;
+  });
   const extractor = await g.embedder;
   const out = await extractor(text, { pooling: "mean", normalize: true });
   return Array.from(out.data as Float32Array);
