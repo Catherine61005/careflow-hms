@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { api } from "@/lib/http";
 import { requireRole } from "@/lib/auth";
 import { query, withTransaction } from "@/lib/db";
@@ -45,6 +46,12 @@ export const POST = api(async (req) => {
   });
   // After commit: embed the reason so it joins the semantic triage corpus.
   // Failure here must not undo a valid admission, so it is best-effort.
-  indexAdmission(admissionId).catch((e) => console.error("embedding failed", e));
+  after(async () => {
+    try {
+      await indexAdmission(admissionId);
+    } catch (error) {
+      console.error("Admission embedding failed", { admissionId, error });
+    }
+  });
   return Response.json({ admission_id: admissionId }, { status: 201 });
 });
