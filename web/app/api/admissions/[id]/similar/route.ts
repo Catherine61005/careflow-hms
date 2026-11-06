@@ -12,7 +12,7 @@ export const GET = api<Ctx>(async (_req, { params }) => {
   const src = await queryOne("SELECT embedding FROM clinical_embedding WHERE source_type='admission' AND source_id=$1", [id]);
   if (!src) throw new HttpError(404, "This admission has not been embedded yet (run npm run embed)");
   const rows = await query(`
-    WITH q AS (SELECT embedding FROM clinical_embedding WHERE source_type='admission' AND source_id=$1)
+    WITH q AS (SELECT embedding, model FROM clinical_embedding WHERE source_type='admission' AND source_id=$1)
     SELECT a.admission_id, a.reason, a.admission_date, a.discharge_date,
            a.discharge_date - a.admission_date AS stay_days,
            d.name AS doctor_name, dep.department_name, b.total_amount,
@@ -23,6 +23,7 @@ export const GET = api<Ctx>(async (_req, { params }) => {
       JOIN department dep ON dep.department_id = d.department_id
       LEFT JOIN bill b    ON b.admission_id = a.admission_id
      WHERE ce.source_type = 'admission' AND ce.source_id <> $1 AND a.discharge_date IS NOT NULL
+       AND ce.model = q.model
      ORDER BY ce.embedding <=> q.embedding
      LIMIT 8`, [id]);
   const stats = rows.length ? {

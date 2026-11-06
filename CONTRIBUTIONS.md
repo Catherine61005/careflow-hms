@@ -1,37 +1,31 @@
-# Individual contributions
+# Team responsibilities
 
-Both members work on the database **and** the application, as the project brief requires.
-Each member commits their own files from their own GitHub account so the commit history shows the split.
+The Level 3 brief asks both members to contribute to database and application development. The table assigns equal presentation time and gives each member a database walkthrough, an application demo, and a test to explain.
 
-## Member 1 — Bhavesh Velluru — PES1UG24CS115 — Inpatient & finance
+| Time | Catherine D (PES1UG24CS120) | Bhavesh V (PES1UG24CS115) |
+|---|---|---|
+| 2 minutes each | **Relational design.** Introduce the hospital workflow, ER diagram, relational schema, keys, and integrity constraints. | **Vector design.** Explain why admission reasons and department profiles are embedded, how MiniLM produces 384-dimensional vectors, and which metadata the vector table stores. |
+| 3 minutes each | **SQL and Next.js.** Book a visit and show the overlap constraint. Show how discharge frees a room and creates a bill. Trace the app actions to the route handlers and SQL. | **pgvector and Next.js.** Use Smart Triage to compare semantic and keyword results and show the suggested doctor and slot. Open Similar Past Cases and show how cosine neighbours link to stays and bills. |
+| 1 minute each | **SQL verification.** Run an overlap or billing integrity test and explain the constraint or trigger that enforces it. | **Vector verification.** Show the embedding inventory and one retrieval test. Explain same-model filtering and how the similar-cases test waits for a new embedding. |
 
-**Database**
-- Tables: `room`, `room_allocation`, `admission`, `bill`, `payment` (+ their constraints: `ex_room_overlap`, `uq_one_open_admission`, `ck_discharge_after_admit`, `money_inr` domain)
-- `fn_calculate_bill`, `fn_bill_outstanding`, `fn_admit_patient`, `fn_transfer_room`, `sp_discharge_patient`
-- Triggers: room availability (T3), payment validation (T4), bill status (T5)
-- Views: `v_current_occupancy`, `v_bill_status`, `mv_monthly_department_revenue`; `fn_refresh_revenue`
-- Queries Q1, Q2, Q6, Q8, Q9, Q14 in `07_queries.sql`; integrity tests TC17–TC30, TC36–TC38
+## GitHub evidence
 
-**Application**
-- APIs: `/api/admissions/**`, `/api/rooms/**`, `/api/bills/**`, `/api/reports/revenue`, `/api/dashboard`
-- Pages: Admissions, Rooms, Billing, Reports, Dashboard
-- API tests API16–API21, API30–API32
+The presentation assignments above describe current ownership. These links show which changes each member's account committed.
 
-## Member 2 — Catherine D — PES1UG24CS120 — Outpatient, clinical & triage
+- **Catherine.** [Initial schema, triggers, views, and roles](https://github.com/Catherine61005/careflow-hms/commit/0cef2f6), [missed follow-ups SQL report](https://github.com/Catherine61005/careflow-hms/commit/28ad2f8), [patient email search in SQL and the app](https://github.com/Catherine61005/careflow-hms/commit/d37a5bb), and [initial app libraries including vector support](https://github.com/Catherine61005/careflow-hms/commit/4132e63).
+- **Bhavesh.** [Length-of-stay SQL report](https://github.com/Catherine61005/careflow-hms/commit/a3b7f50), [SQL integrity tests](https://github.com/Catherine61005/careflow-hms/commit/0915220), and [ward and billing UI/API work](https://github.com/Catherine61005/careflow-hms/pull/1). The vector demo branch includes same-model retrieval and backfill (`9cc3446`) and the similar-cases API test (`269df9e`).
 
-**Database**
-- Tables: `hospital`, `department`, `doctor`, `patient`, `appointment`, `prescription`, `medication`, `test`, `test_result`, `app_user`, `audit_log`, `clinical_embedding`
-- `phone_no` domain, `ex_doctor_slot` exclusion constraint, FTS / trigram / HNSW indexes
-- Triggers: DOB (T1), appointment-in-past (T2), result-completes-test (T6), audit (T7); `fn_is_abnormal`, `fn_patient_age`
-- Views: `v_patient_summary`, `v_doctor_schedule`, `v_test_results`; roles in `04_roles.sql`; `05_alter_migration.sql`
-- Vector store design and embedding pipeline (`embed-backfill.mjs`, `lib/embeddings.ts`, `lib/vectorstore.ts`)
-- Queries Q3, Q4, Q5, Q7, Q10–Q13, Q15; integrity tests TC01–TC16, TC31–TC35
+## Vector demo checklist
 
-**Application**
-- Auth & RBAC (`lib/auth.ts`, `proxy.ts`, login, `/api/admin/**`)
-- APIs: `/api/patients/**`, `/api/appointments/**`, `/api/prescriptions`, `/api/tests/**`, `/api/triage`, `/api/doctors`, `/api/departments`
-- Pages: Smart Triage, Patients, Patient detail, Appointments, Prescriptions & Labs, Users & Audit
-- API tests API01–API15, API22–API29, API33
+1. Use a seeded development database and run `npm run embed` from `web/` before starting the app. After changing to a compatible 384-dimensional model, rerun backfill to refresh admission vectors from the old model.
+2. In PostgreSQL, check the model and dimensions present in the vector store. Explain how cosine distance (`<=>`) orders neighbours and how the HNSW index supports that search.
 
-## Shared
-ER diagram and relational schema, seed generator, README, project report.
+   ```sql
+   SELECT source_type, model, vector_dims(embedding) AS dimensions, count(*) AS rows
+   FROM hms.clinical_embedding
+   GROUP BY source_type, model, vector_dims(embedding)
+   ORDER BY source_type, model, dimensions;
+   ```
+
+3. Sign in as receptionist and try “my chest feels heavy and the pain goes into my left arm” in Smart Triage. Compare the recommendation and similar cases with the keyword results. Then open a seeded admission's Similar Past Cases view.
+4. Run the full API suite against the development app and check API25–API27. API27 uses the admission created earlier in the suite. The suite writes demo records.
