@@ -4,16 +4,18 @@ The Level 3 brief asks both members to contribute to database and application de
 
 | Time | Catherine D (PES1UG24CS120) | Bhavesh V (PES1UG24CS115) |
 |---|---|---|
-| 2 minutes each | **Relational design.** Introduce the hospital workflow, ER diagram, relational schema, keys, and integrity constraints. | **Vector design.** Explain why admission reasons and department profiles are embedded, how MiniLM produces 384-dimensional vectors, and which metadata the vector table stores. |
-| 3 minutes each | **SQL and Next.js.** Book a visit and show the overlap constraint. Show how discharge frees a room and creates a bill. Trace the app actions to the route handlers and SQL. | **pgvector and Next.js.** Use Smart Triage to compare semantic and keyword results and show the suggested doctor and slot. Open Similar Past Cases and show how cosine neighbours link to stays and bills. |
-| 1 minute each | **SQL verification.** Run an overlap or billing integrity test and explain the constraint or trigger that enforces it. | **Vector verification.** Show the embedding inventory and one retrieval test. Explain same-model filtering and how the similar-cases test waits for a new embedding. |
+| 3 minutes each | **Relational design.** Introduce the hospital workflow, ER diagram, relational schema, keys, and integrity constraints. | **Vector design.** Explain why admission reasons and department profiles are embedded, how MiniLM produces 384-dimensional vectors, and which metadata the vector table stores. |
+| 6 minutes each | **SQL and Next.js.** Book a visit and show the overlap constraint. Show how discharge frees a room and creates a bill. Trace the app actions to the route handlers and SQL. | **pgvector and Next.js.** Use Smart Triage to compare semantic and keyword results and show the suggested doctor and slot. Open Similar Past Cases and show how cosine neighbours link to stays and bills. |
+| 3 minutes each | **SQL verification.** Run an overlap or billing integrity test and explain the constraint or trigger that enforces it. | **Vector verification.** Show the embedding inventory and one retrieval test. Explain same-model filtering and how the similar-cases test waits for a new embedding. |
+
+The remaining six minutes are for individual questions, with three minutes reserved for each member. See the [demo runbook](docs/DEMO.md).
 
 ## GitHub evidence
 
 The presentation assignments above describe current ownership. These links show which changes each member's account committed.
 
 - **Catherine.** [Initial schema, triggers, views, and roles](https://github.com/Catherine61005/careflow-hms/commit/0cef2f6), [missed follow-ups SQL report](https://github.com/Catherine61005/careflow-hms/commit/28ad2f8), [patient email search in SQL and the app](https://github.com/Catherine61005/careflow-hms/commit/d37a5bb), and [initial app libraries including vector support](https://github.com/Catherine61005/careflow-hms/commit/4132e63).
-- **Bhavesh.** [Length-of-stay SQL report](https://github.com/Catherine61005/careflow-hms/commit/a3b7f50), [SQL integrity tests](https://github.com/Catherine61005/careflow-hms/commit/0915220), and [ward and billing UI/API work](https://github.com/Catherine61005/careflow-hms/pull/1). The vector demo branch includes same-model retrieval and backfill (`9cc3446`) and the similar-cases API test (`269df9e`).
+- **Bhavesh.** [Length-of-stay SQL report](https://github.com/Catherine61005/careflow-hms/commit/a3b7f50), [SQL integrity tests](https://github.com/Catherine61005/careflow-hms/commit/0915220), and [ward and billing UI/API work](https://github.com/Catherine61005/careflow-hms/pull/1). The vector changes cover [same-model retrieval and backfill](https://github.com/Catherine61005/careflow-hms/commit/9cc3446), [the similar-cases API test](https://github.com/Catherine61005/careflow-hms/commit/269df9e), [model-load retry](https://github.com/Catherine61005/careflow-hms/commit/3d1b59d), and [post-response admission indexing](https://github.com/Catherine61005/careflow-hms/commit/996573b).
 
 ## Vector demo checklist
 
@@ -21,9 +23,9 @@ The presentation assignments above describe current ownership. These links show 
 2. In PostgreSQL, check the model and dimensions present in the vector store. Explain how cosine distance (`<=>`) orders neighbours and how the HNSW index supports that search.
 
    ```sql
-   SELECT source_type, model, vector_dims(embedding) AS dimensions, count(*) AS rows
+   SELECT source_type, model, hms.vector_dims(embedding) AS dimensions, count(*) AS rows
    FROM hms.clinical_embedding
-   GROUP BY source_type, model, vector_dims(embedding)
+   GROUP BY source_type, model, hms.vector_dims(embedding)
    ORDER BY source_type, model, dimensions;
    ```
 

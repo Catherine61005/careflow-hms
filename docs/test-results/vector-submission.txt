@@ -1,0 +1,5 @@
+ source_type |          model          | vector_dims | count
+-------------+-------------------------+-------------+-------
+ admission   | Xenova/all-MiniLM-L6-v2 |         384 |   234
+ department  | Xenova/all-MiniLM-L6-v2 |         384 |    12
+(2 rows)

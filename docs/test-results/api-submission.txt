@@ -1,0 +1,45 @@
+
+> careflow-hms-web@1.0.0 test
+> node --test tests/*.test.mjs
+
+✔ API01 wrong password is rejected with 401 and a generic message (868.998333ms)
+✔ API02 unknown user gets the same generic message (no user enumeration) (8.268375ms)
+✔ API03 unauthenticated request to a protected API returns 401 (79.776917ms)
+✔ API04 receptionist cannot open admin user management (403) (47.886125ms)
+✔ API05 doctor cannot view billing (403) (57.450667ms)
+✔ API06 doctor cannot register patients (403) (11.494417ms)
+✔ API07 receptionist cannot write prescriptions (403) (46.6205ms)
+✔ API08 doctor sees only their own appointments (62.39375ms)
+✔ API09 receptionist registers a valid patient (201) (16.595542ms)
+✔ API10 invalid phone rejected by API validation (400) (8.547833ms)
+✔ API11 future date of birth passes API but is rejected by the DATABASE trigger (400) (8.561417ms)
+✔ API12 SQL-injection text in search is treated as data (24.543667ms)
+✔ API13 fuzzy search finds the patient despite a typo (14.948541ms)
+✔ API14 booking + double-booking the same 30-min slot returns 409 (EXCLUDE constraint) (21.84025ms)
+✔ API15 booking in the past is rejected (trigger, 400) (7.229708ms)
+✔ API16 admit patient (transaction) marks the room Occupied (649.991583ms)
+✔ API17 admitting an already-admitted patient returns 409 (23.992375ms)
+✔ API18 admitting someone into the occupied room returns 409 (6.713916ms)
+✔ API19 discharge calls the stored procedure, frees the room and generates a bill (696.984375ms)
+✔ API20 overpayment is rejected by the database trigger (484.392834ms)
+✔ API21 partial then full payment moves bill Unpaid -> Partially Paid -> Paid (36.196125ms)
+✔ API22 prescription with a duplicate medicine rolls back completely (409) (19.074667ms)
+✔ API23 valid multi-medicine prescription is saved (201) (9.551667ms)
+✔ API24 entering a lab result completes the test and flags abnormal values (503.025292ms)
+✔ API25 semantic triage routes a cardiac complaint to Cardiology with zero keyword overlap (50.276125ms)
+✔ API26 semantic triage routes a paediatric seizure to Pediatrics/Neurology (13.767291ms)
+✔ API27 new admission was embedded automatically and has similar cases (459.530875ms)
+✔ API28 audit log records who made the change (45.878709ms)
+✔ API29 disabling a user invalidates their existing session immediately (636.263875ms)
+✔ API30 ward occupancy is independent of the availability filter (17.884666ms)
+✔ API31 CSV exports all matching bills beyond the screen's 200 row limit (105.103041ms)
+✔ API32 doctor and anonymous clients cannot export bills (78.34325ms)
+✔ API33 patient search matches part of an e-mail address (10.47925ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5216.396

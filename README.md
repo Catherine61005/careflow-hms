@@ -90,24 +90,18 @@ Prerequisites: **Node.js 20+** and either **Docker Desktop** (easiest) or a loca
 
 ```bash
 git clone https://github.com/Catherine61005/careflow-hms.git && cd careflow-hms
-docker compose up -d                 # PostgreSQL + pgvector, schema and seed loaded automatically
+docker compose up -d --build         # PostgreSQL + pgvector, schema and seed loaded automatically
 cd web
 cp .env.example .env.local           # Windows: copy .env.example .env.local
 # edit .env.local: keep HMS_APP_PASSWORD=change_me (matches docker-compose) and set JWT_SECRET
-npm install
+npm ci
 npm run embed                        # downloads the embedding model once (~90 MB) and fills the vector store
 npm run dev                          # http://localhost:3000
 ```
 
-If Docker reports `/bin/bash: bad interpreter: Permission denied` while running the
-initialization script, and the new database has no `hms` schema, initialize it explicitly:
-
-```bash
-docker exec careflow-db bash /hms-db/docker-init.sh
-```
-
-This script drops and recreates the HMS schema. Use this recovery only for a new,
-empty development database; do not run it against data you want to keep.
+Wait for `docker compose logs db` to show `CareFlow database ready` on the
+first start before running the embedding backfill. If an earlier startup
+left an empty database volume, follow the recovery steps in the demo guide.
 
 ### Option B — Local PostgreSQL
 
@@ -116,7 +110,7 @@ empty development database; do not run it against data you want to keep.
 3. In `web/.env.local` set `DATABASE_ADMIN_URL` (a superuser connection), `HMS_APP_PASSWORD`, `DATABASE_URL`
    (`postgres://hms_app:<HMS_APP_PASSWORD>@localhost:5432/hms`) and `JWT_SECRET`.
 4. ```bash
-   cd web && npm install
+   cd web && npm ci
    npm run db:setup    # runs db/01..06 (drops and recreates schema hms)
    npm run embed
    npm run dev
@@ -141,6 +135,13 @@ npm test                                                      # 33 API tests (wr
 ```
 
 Latest results are in `docs/test-results/` (see the dated run notes for the latest counts).
+
+## Demo and submission files
+
+- [30-minute demo and two-laptop checklist](docs/DEMO.md)
+- [Final project report](output/pdf/careflow-hms-project-report.pdf)
+- [A4 ER diagram, landscape](output/pdf/careflow-hms-er-diagram-a4.pdf)
+- [A4 relational schema, portrait](output/pdf/careflow-hms-relational-schema-a4.pdf)
 
 ## Requirement coverage
 
