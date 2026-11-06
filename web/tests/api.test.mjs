@@ -3,6 +3,7 @@
 // NOTE: creates real rows (a test patient, admission, bill...). Use a dev database.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
+import { setTimeout as delay } from "node:timers/promises";
 
 const BASE = process.env.BASE_URL || "http://localhost:3000";
 const DOCTOR_USER = process.env.TEST_DOCTOR || "dr.arjun1";
@@ -199,10 +200,17 @@ test("API26 semantic triage routes a paediatric seizure to Pediatrics/Neurology"
   assert.ok(["Pediatrics", "Neurology"].includes(r.body.recommendations[0].department_name));
 });
 test("API27 new admission was embedded automatically and has similar cases", async () => {
-  await new Promise((res) => setTimeout(res, 1500));
-  const r = await rec("GET", `/api/admissions/${admissionId}/similar`);
-  assert.equal(r.status, 200);
+  const path = `/api/admissions/${admissionId}/similar`;
+  const deadline = Date.now() + 30_000;
+  let r = await rec("GET", path);
+  while (r.status === 404 && r.body.error?.startsWith("This admission has not been embedded yet")
+         && Date.now() < deadline) {
+    await delay(250);
+    r = await rec("GET", path);
+  }
+  assert.equal(r.status, 200, r.body.error);
   assert.ok(r.body.rows.length > 0);
+  assert.ok(r.body.rows.every((row) => row.admission_id !== admissionId));
 });
 
 // ---------------------------------------------------------------- audit + account lifecycle
