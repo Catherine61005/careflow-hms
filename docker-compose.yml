@@ -2,7 +2,7 @@
 # Usage:  docker compose up -d        (reset: docker compose down -v && docker compose up -d)
 services:
   db:
-    image: pgvector/pgvector:pg16
+    build: ./db
     container_name: careflow-db
     restart: unless-stopped
     environment:
@@ -17,7 +17,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db:/hms-db:ro
-      - ./db/docker-init.sh:/docker-entrypoint-initdb.d/10-hms-init.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d hms"]
       interval: 5s
