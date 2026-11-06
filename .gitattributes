@@ -1,2 +1,10 @@
 *.sh text eol=lf
 *.sql text eol=lf
+
+# Never rewrite line endings in binary files (a CRLF rewrite corrupts PDFs)
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.onnx binary
